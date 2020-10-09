@@ -1,0 +1,19 @@
+非递归的中序遍历
+public void inOrder(){
+	Node current =root;
+	//把LinkedList作为栈使用
+	LinkedList<Node> s = new LinkedList<Node>();
+	while(current !=null || ! s.isEmpty()){
+		while(current!=nul){
+			s.addFirst(current);
+			current = current.left;
+		}
+		if(!s.isEmpty()){
+			current=s.removeFirst();
+			System.out.print(current.data+"->");
+			current=current.right;
+		}
+	}
+	
+}
+

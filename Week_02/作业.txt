@@ -1,0 +1,116 @@
+﻿题目一：
+有效的字母异位词：给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+https://leetcode-cn.com/problems/valid-anagram/description/
+
+
+answer：
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length()!=t.length()){
+            return false;
+        }
+        int[] a = new int[26];
+        for(int i=0;i<s.length();i++){
+            a[s.charAt(i)-'a'] ++;
+            a[t.charAt(i) - 'a'] --;
+        }
+        for(int i=0;i<26;i++){
+            if(a[i]!=0){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+题目二；
+字母异位词分组：给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+https://leetcode-cn.com/problems/group-anagrams/
+
+
+answer：
+
+  public List<List<String>> groupAnagrams(String[] strs) {
+        if(strs==null || strs.length==0){
+            return new ArrayList<>();
+        }
+        Map<String,List<String>> map = new HashMap<>();
+        for(int i=0;i<strs.length;i++){
+            char[] c = strs[i].toCharArray();
+            Arrays.sort(c);
+            String keyStr = String.valueOf(c);
+            if(!map.containsKey(keyStr)){
+                map.put(keyStr,new ArrayList<>());
+            }
+            map.get(keyStr).add(strs[i]);
+        }
+        return new ArrayList<>(map.values());
+
+    }
+
+
+题目三 
+给定一个二叉树，返回它的中序 遍历。
+
+示例:
+
+输入: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+输出: [1,3,2]
+
+地址：https://leetcode-cn.com/problems/binary-tree-inorder-traversal/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<Integer>();
+        inOrder(root,list);
+        return list;
+    }
+    public void inOrder(TreeNode node,List<Integer> res){
+        if(node==null){
+            return ;
+        }
+        inOrder(node.left,res);
+        res.add(node.val);
+        inOrder(node.right,res);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
