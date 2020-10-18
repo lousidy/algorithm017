@@ -1,0 +1,20 @@
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+Stack<TreeNode> stack = new Stack<TreeNode>();
+Integer inorder = null;
+    while(!stack.isEmpty()|| root!=null){
+	    while(root!=null){
+		    stack.push(root);
+		    root = root.left;
+	}
+	root = stack.pop();
+	if(inorder!=null && root.val <= inorder) {
+        return false;
+    }
+	inorder = root.val;
+	root = root.right;
+    }
+
+return true;
+    }
+}
