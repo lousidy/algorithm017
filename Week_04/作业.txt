@@ -1,0 +1,79 @@
+题目1：https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/
+ 寻找旋转排序数组中的最小值
+解答：
+class Solution {
+  public int findMin(int[] nums) {
+    // If the list has just one element then return that element.
+    if (nums.length == 1) {
+      return nums[0];
+    }
+
+    // initializing left and right pointers.
+    int left = 0, right = nums.length - 1;
+
+    // if the last element is greater than the first element then there is no rotation.
+    // e.g. 1 < 2 < 3 < 4 < 5 < 7. Already sorted array.
+    // Hence the smallest element is first element. A[0]
+    if (nums[right] > nums[0]) {
+      return nums[0];
+    }
+    
+    // Binary search way
+    while (right >= left) {
+      // Find the mid element
+      int mid = left + (right - left) / 2;
+
+      // if the mid element is greater than its next element then mid+1 element is the smallest
+      // This point would be the point of change. From higher to lower value.
+      if (nums[mid] > nums[mid + 1]) {
+        return nums[mid + 1];
+      }
+
+      // if the mid element is lesser than its previous element then mid element is the smallest
+      if (nums[mid - 1] > nums[mid]) {
+        return nums[mid];
+      }
+
+      // if the mid elements value is greater than the 0th element this means
+      // the least value is still somewhere to the right as we are still dealing with elements
+      // greater than nums[0]
+      if (nums[mid] > nums[0]) {
+        left = mid + 1;
+      } else {
+        // if nums[0] is greater than the mid value then this means the smallest value is somewhere to
+        // the left
+        right = mid - 1;
+      }
+    }
+    return -1;
+  }
+}
+
+
+
+题目2： https://leetcode-cn.com/problems/search-a-2d-matrix/
+搜索二维矩阵
+
+
+题解：
+class Solution {
+  public boolean searchMatrix(int[][] matrix, int target) {
+    int m = matrix.length;
+    if (m == 0) return false;
+    int n = matrix[0].length;
+
+
+    int left = 0, right = m * n - 1;
+    int pivotIdx, pivotElement;
+    while (left <= right) {
+      pivotIdx = (left + right) / 2;
+      pivotElement = matrix[pivotIdx / n][pivotIdx % n];
+      if (target == pivotElement) return true;
+      else {
+        if (target < pivotElement) right = pivotIdx - 1;
+        else left = pivotIdx + 1;
+      }
+    }
+    return false;
+  }
+}
