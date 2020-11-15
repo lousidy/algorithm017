@@ -1,0 +1,147 @@
+
+
+1，实现 Trie (前缀树)
+https://leetcode-cn.com/problems/implement-trie-prefix-tree/
+
+
+题解：
+class Trie {
+
+   private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    public void insert(String word) {
+        TrieNode node = root;
+        for (int i = 0; i < word.length(); i++) {
+            char currentChar = word.charAt(i);
+            if (!node.containsKey(currentChar)) {
+                node.put(currentChar, new TrieNode());
+            }
+            node = node.get(currentChar);
+        }
+        node.setEnd();
+    }
+    
+     private TrieNode searchPrefix(String word) {
+        TrieNode node = root;
+        for (int i = 0; i < word.length(); i++) {
+           char curLetter = word.charAt(i);
+           if (node.containsKey(curLetter)) {
+               node = node.get(curLetter);
+           } else {
+               return null;
+           }
+        }
+        return node;
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+ TrieNode node = searchPrefix(word);
+       return node != null && node.isEnd();
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+  TrieNode node = searchPrefix(prefix);
+        return node != null;
+    }
+}
+
+ class TrieNode {
+
+    // R links to node children
+    private TrieNode[] links;
+
+    private final int R = 26;
+
+    private boolean isEnd;
+
+    public TrieNode() {
+        links = new TrieNode[R];
+    }
+
+    public boolean containsKey(char ch) {
+        return links[ch -'a'] != null;
+    }
+    public TrieNode get(char ch) {
+        return links[ch -'a'];
+    }
+    public void put(char ch, TrieNode node) {
+        links[ch -'a'] = node;
+    }
+    public void setEnd() {
+        isEnd = true;
+    }
+    public boolean isEnd() {
+        return isEnd;
+    }
+}
+
+2，单词接龙
+https://leetcode-cn.com/problems/word-ladder/submissions/
+
+class Solution {
+     Map<String, Integer> wordId = new HashMap<String, Integer>();
+    List<List<Integer>> edge = new ArrayList<List<Integer>>();
+    int nodeNum = 0;
+
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        for (String word : wordList) {
+            addEdge(word);
+        }
+        addEdge(beginWord);
+        if (!wordId.containsKey(endWord)) {
+            return 0;
+        }
+        int[] dis = new int[nodeNum];
+        Arrays.fill(dis, Integer.MAX_VALUE);
+        int beginId = wordId.get(beginWord), endId = wordId.get(endWord);
+        dis[beginId] = 0;
+
+        Queue<Integer> que = new LinkedList<Integer>();
+        que.offer(beginId);
+        while (!que.isEmpty()) {
+            int x = que.poll();
+            if (x == endId) {
+                return dis[endId] / 2 + 1;
+            }
+            for (int it : edge.get(x)) {
+                if (dis[it] == Integer.MAX_VALUE) {
+                    dis[it] = dis[x] + 1;
+                    que.offer(it);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public void addEdge(String word) {
+        addWord(word);
+        int id1 = wordId.get(word);
+        char[] array = word.toCharArray();
+        int length = array.length;
+        for (int i = 0; i < length; ++i) {
+            char tmp = array[i];
+            array[i] = '*';
+            String newWord = new String(array);
+            addWord(newWord);
+            int id2 = wordId.get(newWord);
+            edge.get(id1).add(id2);
+            edge.get(id2).add(id1);
+            array[i] = tmp;
+        }
+    }
+
+    public void addWord(String word) {
+        if (!wordId.containsKey(word)) {
+            wordId.put(word, nodeNum++);
+            edge.add(new ArrayList<Integer>());
+        }
+    }
+
+}
